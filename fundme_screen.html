@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FundMe — AI-Powered Funding Discovery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --black: #000000;
+      --charcoal: #1a1a1a;
+      --grey-dark: #2d2d2d;
+      --grey-mid: #666666;
+      --grey-light: #999999;
+      --grey-border: #e5e5e5;
+      --white: #ffffff;
+      --off-white: #fafafa;
+      --gold: #c9a962;
+      --gold-light: #d4b876;
+      --success: #2d5f3f;
+      --warning: #8b6914;
+      --accent: #1a1a1a;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--charcoal);
+      font-family: 'Inter', -apple-system, sans-serif;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        linear-gradient(90deg, rgba(229, 229, 229, 0.3) 1px, transparent 1px),
+        linear-gradient(rgba(229, 229, 229, 0.3) 1px, transparent 1px),
+        radial-gradient(circle at 10% 20%, rgba(201, 169, 98, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(26, 26, 26, 0.02) 0%, transparent 50%);
+      background-size: 80px 80px, 80px 80px, 100% 100%, 100% 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ============ HERO SECTION ============ */
+    .hero-section {
+      background: var(--black);
+      color: var(--white);
+      padding: 2rem 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.3;
+    }
+
+    .hero-section::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        linear-gradient(135deg, transparent 0%, rgba(201, 169, 98, 0.05) 50%, transparent 100%),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 255, 255, 0.01) 2px, rgba(255, 255, 255, 0.01) 4px);
+      pointer-events: none;
+    }
+
+    .top-nav {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .filter-toggle {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--white);
+      padding: 0.75rem 2rem;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .filter-toggle:hover {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .notification-icon {
+      position: relative;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s;
+      font-size: 1rem;
+    }
+
+    .notification-icon:hover {
+      background: var(--white);
+      border-color: var(--white);
+    }
+
+    .notification-icon:hover span {
+      filter: invert(1);
+    }
+
+    .notification-dot {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      border: 1px solid var(--black);
+    }
+
+    .user-profile-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 1.25rem;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.4s;
+      color: var(--white);
+    }
+
+    .user-profile-btn:hover {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .user-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 4rem 8rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 7rem;
+      font-weight: 300;
+      letter-spacing: -2px;
+      margin-bottom: 1.5rem;
+      line-height: 1;
+    }
+
+    .hero-tagline {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ============ FILTER PANEL ============ */
+    .filter-panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--white);
+      z-index: 1000;
+      transform: translateY(-100%);
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-y: auto;
+    }
+
+    .filter-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle at top right, rgba(201, 169, 98, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .filter-panel.active {
+      transform: translateY(0);
+    }
+
+    .filter-panel-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 3rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--grey-border);
+    }
+
+    .filter-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      letter-spacing: -1px;
+    }
+
+    .filter-close-btn {
+      background: transparent;
+      border: 1px solid var(--charcoal);
+      padding: 0.75rem 2rem;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.4s;
+      font-weight: 500;
+    }
+
+    .filter-close-btn:hover {
+      background: var(--charcoal);
+      color: var(--white);
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4rem;
+      margin-bottom: 4rem;
+    }
+
+    .filter-item {
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--grey-border);
+    }
+
+    .filter-item h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 2rem;
+      letter-spacing: -0.5px;
+    }
+
+    .filter-label {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .filter-select {
+      width: 100%;
+      padding: 1rem 0;
+      border: none;
+      border-bottom: 1px solid var(--grey-border);
+      background: transparent;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.3s;
+      color: var(--charcoal);
+    }
+
+    .filter-select:focus {
+      border-bottom-color: var(--charcoal);
+    }
+
+    .checkbox-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: var(--charcoal);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--grey-mid);
+      cursor: pointer;
+      accent-color: var(--charcoal);
+    }
+
+    .range-wrapper {
+      margin-top: 2rem;
+    }
+
+    .range-track {
+      position: relative;
+      height: 2px;
+      background: var(--grey-border);
+      margin: 3rem 0 2rem;
+    }
+
+    .range-fill {
+      position: absolute;
+      height: 100%;
+      background: var(--charcoal);
+      left: 0;
+      right: 50%;
+    }
+
+    .range-input {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      top: 0;
+      left: 0;
+      background: transparent;
+      pointer-events: none;
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .range-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: var(--charcoal);
+      border: 3px solid var(--white);
+      border-radius: 50%;
+      cursor: pointer;
+      pointer-events: auto;
+      box-shadow: 0 0 0 1px var(--charcoal);
+    }
+
+    .range-input::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: var(--charcoal);
+      border: 3px solid var(--white);
+      border-radius: 50%;
+      cursor: pointer;
+      pointer-events: auto;
+      box-shadow: 0 0 0 1px var(--charcoal);
+    }
+
+    .range-input#minRange {
+      z-index: 2;
+    }
+
+    .range-values {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+
+    .range-value-item {
+      text-align: center;
+    }
+
+    .range-value-label {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+      margin-bottom: 0.5rem;
+    }
+
+    .range-value-display {
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--charcoal);
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 1.5rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--grey-border);
+    }
+
+    .btn-clear, .btn-apply {
+      flex: 1;
+      padding: 1.25rem;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.4s;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-clear {
+      background: transparent;
+      border: 1px solid var(--charcoal);
+      color: var(--charcoal);
+    }
+
+    .btn-clear:hover {
+      background: var(--charcoal);
+      color: var(--white);
+    }
+
+    .btn-apply {
+      background: var(--charcoal);
+      border: 1px solid var(--charcoal);
+      color: var(--white);
+    }
+
+    .btn-apply:hover {
+      background: var(--black);
+      border-color: var(--black);
+    }
+
+    /* ============ MAIN CONTENT ============ */
+    .main-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 5rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .main-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(201, 169, 98, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .main-content::after {
+      content: '';
+      position: absolute;
+      bottom: 20%;
+      left: 0;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(26, 26, 26, 0.02) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .profile-section {
+      background: var(--off-white);
+      padding: 3rem;
+      margin-bottom: 5rem;
+      border: 1px solid var(--grey-border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(201, 169, 98, 0.02));
+      pointer-events: none;
+    }
+
+    .profile-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      margin-bottom: 2rem;
+      letter-spacing: -0.5px;
+    }
+
+    .profile-details {
+      display: flex;
+      gap: 3rem;
+    }
+
+    .profile-detail {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--grey-mid);
+    }
+
+    .stats-section {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      margin-bottom: 6rem;
+    }
+
+    .stat-item {
+      padding: 2.5rem 2rem;
+      background: var(--white);
+      border: 1px solid var(--grey-border);
+      transition: all 0.4s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-item::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(201, 169, 98, 0.03) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .stat-item:hover {
+      border-color: var(--charcoal);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      color: var(--charcoal);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-desc {
+      font-size: 0.85rem;
+      color: var(--grey-light);
+    }
+
+    .opportunities-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--grey-border);
+      position: relative;
+    }
+
+    .opportunities-header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 200px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    .opportunities-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: -1px;
+    }
+
+    .ai-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--charcoal);
+      color: var(--white);
+      padding: 0.4rem 1rem;
+      font-size: 0.65rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .sort-dropdown {
+      padding: 1rem 2rem;
+      border: 1px solid var(--grey-border);
+      background: transparent;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.3s;
+    }
+
+    .sort-dropdown:focus {
+      outline: none;
+      border-color: var(--charcoal);
+    }
+
+    .opportunities-list {
+      display: grid;
+      gap: 3rem;
+    }
+
+    .opportunity-item {
+      background: var(--white);
+      border: 1px solid var(--grey-border);
+      padding: 3rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .opportunity-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 0;
+      background: linear-gradient(180deg, var(--gold), var(--charcoal));
+      transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .opportunity-item:hover::before {
+      height: 100%;
+    }
+
+    .opportunity-item::after {
+      content: '';
+      position: absolute;
+      bottom: -100px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(201, 169, 98, 0.02) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      transition: all 0.6s;
+    }
+
+    .opportunity-item:hover {
+      border-color: var(--charcoal);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+      transform: translateX(4px);
+    }
+
+    .opportunity-item:hover::after {
+      bottom: -50px;
+      right: -50px;
+    }
+
+    .opp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--grey-border);
+    }
+
+    .opp-left {
+      flex: 1;
+    }
+
+    .opp-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    .opp-subtitle {
+      font-size: 0.85rem;
+      color: var(--grey-mid);
+      letter-spacing: 0.5px;
+    }
+
+    .opp-match {
+      text-align: right;
+    }
+
+    .match-score {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4rem;
+      font-weight: 300;
+      line-height: 1;
+      color: var(--success);
+    }
+
+    .match-text {
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+      font-weight: 500;
+    }
+
+    .opp-badges {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .badge {
+      padding: 0.5rem 1.25rem;
+      font-size: 0.65rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .badge-ai {
+      background: var(--charcoal);
+      color: var(--white);
+    }
+
+    .badge-urgent {
+      background: #fff8e1;
+      color: var(--warning);
+    }
+
+    .badge-new {
+      background: #e3f2e9;
+      color: var(--success);
+    }
+
+    .ai-insight {
+      background: var(--off-white);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border-left: 2px solid var(--charcoal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ai-insight::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 120px;
+      height: 100%;
+      background: 
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(201, 169, 98, 0.01) 10px, rgba(201, 169, 98, 0.01) 20px);
+      pointer-events: none;
+    }
+
+    .ai-insight-title {
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .ai-insight-text {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--grey-dark);
+    }
+
+    .opp-details {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--grey-border);
+      border-bottom: 1px solid var(--grey-border);
+    }
+
+    .detail {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .detail-label {
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+      font-weight: 500;
+    }
+
+    .detail-value {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--charcoal);
+    }
+
+    .detail-value.amount {
+      color: var(--success);
+      font-size: 1.3rem;
+    }
+
+    .eligibility-section {
+      margin-bottom: 2rem;
+    }
+
+    .eligibility-section h4 {
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .eligibility-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .eligibility-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.9rem;
+      color: var(--grey-dark);
+    }
+
+    .check-mark {
+      width: 20px;
+      height: 20px;
+      border: 1px solid var(--success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--success);
+      font-size: 0.7rem;
+    }
+
+    .opp-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.4s;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      border: 1px solid;
+    }
+
+    .btn-primary {
+      background: var(--charcoal);
+      border-color: var(--charcoal);
+      color: var(--white);
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: var(--black);
+      border-color: var(--black);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--charcoal);
+      color: var(--charcoal);
+      flex: 1;
+    }
+
+    .btn-secondary:hover {
+      background: var(--charcoal);
+      color: var(--white);
+    }
+
+    .btn-icon {
+      background: transparent;
+      border-color: var(--grey-border);
+      color: var(--charcoal);
+      padding: 1rem 1.5rem;
+    }
+
+    .btn-icon:hover {
+      border-color: var(--charcoal);
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 1200px) {
+      .hero-content h1 {
+        font-size: 5rem;
+      }
+
+      .filter-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stats-section {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .opp-details {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top-nav, .hero-content, .filter-panel-inner, .main-content {
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+
+      .hero-content h1 {
+        font-size: 3.5rem;
+      }
+
+      .filter-grid, .stats-section, .opp-details {
+        grid-template-columns: 1fr;
+      }
+
+      .opp-header {
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .opp-match {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Decorative SVG Patterns -->
+  <svg width="0" height="0" style="position: absolute;">
+    <defs>
+      <pattern id="dotPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+        <circle cx="1" cy="1" r="1" fill="rgba(201, 169, 98, 0.08)" />
+      </pattern>
+      <pattern id="linePattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M0 20 L40 20" stroke="rgba(0, 0, 0, 0.02)" stroke-width="1" />
+      </pattern>
+    </defs>
+  </svg>
+
+  <!-- Floating Decorative Elements -->
+  <div style="position: fixed; top: 15%; right: 5%; width: 300px; height: 300px; border: 1px solid rgba(201, 169, 98, 0.1); border-radius: 50%; pointer-events: none; z-index: 0;"></div>
+  <div style="position: fixed; bottom: 10%; left: 3%; width: 200px; height: 200px; border: 1px solid rgba(26, 26, 26, 0.05); transform: rotate(45deg); pointer-events: none; z-index: 0;"></div>
+
+  <!-- HERO SECTION -->
+  <div class="hero-section">
+    <div class="top-nav">
+      <button class="filter-toggle" onclick="toggleFilters()">Filters</button>
+      <div class="user-actions">
+        <button class="notification-icon" onclick="showNotifications()">
+          <span>🔔</span>
+          <div class="notification-dot"></div>
+        </button>
+        <button class="user-profile-btn">
+          <div class="user-avatar">SK</div>
+          <span class="user-name">Startup Founder</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-content">
+      <h1>FundMe</h1>
+      <p class="hero-tagline">AI-Powered Funding Discovery for Ambitious Startups</p>
+    </div>
+  </div>
+
+  <!-- FILTER PANEL -->
+  <div class="filter-panel" id="filterPanel">
+    <div class="filter-panel-inner">
+      <div class="filter-header">
+        <h2>Refine Search</h2>
+        <button class="filter-close-btn" onclick="toggleFilters()">Close</button>
+      </div>
+
+      <div class="filter-grid">
+        <!-- Sector -->
+        <div class="filter-item">
+          <h3>Sector</h3>
+          <label class="filter-label">Industry Focus</label>
+          <select class="filter-select">
+            <option>All Sectors</option>
+            <option>FinTech</option>
+            <option>HealthTech</option>
+            <option>EdTech</option>
+            <option>AgriTech</option>
+            <option>SaaS</option>
+            <option>E-Commerce</option>
+          </select>
+        </div>
+
+        <!-- Stage -->
+        <div class="filter-item">
+          <h3>Stage</h3>
+          <label class="filter-label">Company Maturity</label>
+          <div class="checkbox-wrapper">
+            <label class="checkbox-item">
+              <input type="checkbox" checked> Idea Stage
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" checked> Pre-Seed
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" checked> Seed
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox"> Series A+
+            </label>
+          </div>
+        </div>
+
+        <!-- Geography -->
+        <div class="filter-item">
+          <h3>Geography</h3>
+          <label class="filter-label">Regional Focus</label>
+          <select class="filter-select">
+            <option>All Regions</option>
+            <option>Africa</option>
+            <option>Asia-Pacific</option>
+            <option>Europe</option>
+            <option>North America</option>
+            <option>South America</option>
+          </select>
+        </div>
+
+        <!-- Funding Type -->
+        <div class="filter-item">
+          <h3>Funding Type</h3>
+          <label class="filter-label">Opportunity Type</label>
+          <div class="checkbox-wrapper">
+            <label class="checkbox-item">
+              <input type="checkbox" checked> Grant
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" checked> Competition
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" checked> Incubator
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" checked> Accelerator
+            </label>
+          </div>
+        </div>
+
+        <!-- Amount Range -->
+        <div class="filter-item">
+          <h3>Amount Range</h3>
+          <label class="filter-label">Funding Amount (₹ Lakhs)</label>
+          <div class="range-wrapper">
+            <div class="range-track">
+              <div class="range-fill" id="rangeFill"></div>
+              <input type="range" class="range-input" id="minRange" min="0" max="100" value="0" oninput="updateRange()">
+              <input type="range" class="range-input" id="maxRange" min="0" max="100" value="100" oninput="updateRange()">
+            </div>
+            <div class="range-values">
+              <div class="range-value-item">
+                <span class="range-value-label">Minimum</span>
+                <div class="range-value-display" id="minValue">₹0L</div>
+              </div>
+              <div class="range-value-item">
+                <span class="range-value-label">Maximum</span>
+                <div class="range-value-display" id="maxValue">₹100L+</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-actions">
+        <button class="btn-clear" onclick="clearFilters()">Clear All</button>
+        <button class="btn-apply" onclick="applyFilters()">Apply Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    
+    <!-- Profile Section -->
+    <div class="profile-section">
+      <h2>Welcome back, Startup Founder</h2>
+      <div class="profile-details">
+        <div class="profile-detail">
+          <span>●</span>
+          <span>FinTech Startup</span>
+        </div>
+        <div class="profile-detail">
+          <span>●</span>
+          <span>Bangalore, India</span>
+        </div>
+        <div class="profile-detail">
+          <span>●</span>
+          <span>Pre-Seed Stage</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+      <div class="stat-item">
+        <div class="stat-label">AI Matched Today</div>
+        <div class="stat-number">12</div>
+        <div class="stat-desc">New opportunities</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Saved Applications</div>
+        <div class="stat-number">8</div>
+        <div class="stat-desc">In progress</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Deadlines This Week</div>
+        <div class="stat-number">3</div>
+        <div class="stat-desc">Action needed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Success Rate</div>
+        <div class="stat-number">78%</div>
+        <div class="stat-desc">Match accuracy</div>
+      </div>
+    </div>
+
+    <!-- Opportunities Header -->
+    <div class="opportunities-header">
+      <h2>
+        Funding Opportunities
+        <span class="ai-indicator">● AI Powered</span>
+      </h2>
+      <select class="sort-dropdown">
+        <option>Best Match</option>
+        <option>Deadline</option>
+        <option>Amount</option>
+        <option>Recently Added</option>
+      </select>
+    </div>
+
+    <!-- Opportunities List -->
+    <div class="opportunities-list">
+      
+      <!-- Opportunity 1 -->
+      <div class="opportunity-item">
+        <div class="opp-header">
+          <div class="opp-left">
+            <h3 class="opp-title">Y Combinator W26 Batch</h3>
+            <p class="opp-subtitle">Accelerator Program · Global</p>
+          </div>
+          <div class="opp-match">
+            <div class="match-score">95%</div>
+            <div class="match-text">Match</div>
+          </div>
+        </div>
+
+        <div class="opp-badges">
+          <span class="badge badge-ai">AI Recommended</span>
+          <span class="badge badge-urgent">Deadline Soon</span>
+        </div>
+
+        <div class="ai-insight">
+          <div class="ai-insight-title">AI Analysis</div>
+          <div class="ai-insight-text">
+            High match because you're a Pre-Seed FinTech startup with global ambitions. YC has funded 15+ similar companies in your sector with 80% success rate.
+          </div>
+        </div>
+
+        <div class="opp-details">
+          <div class="detail">
+            <span class="detail-label">Funding Amount</span>
+            <div class="detail-value amount">$125,000</div>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Deadline</span>
+            <div class="detail-value">Feb 15, 2026</div>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Type</span>
+            <div class="detail-value">Accelerator</div>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Duration</span>
+            <div class="detail-value">3 Months</div>
+          </div>
+        </div>
+
+        <div class="eligibility-section">
+          <h4>Eligibility Requirements</h4>
+          <div class="eligibility-list">
+            <div class="eligibility-item">
+              <div class="check-mark">✓</div>
+              <span>Early-stage startup (Pre-Seed to Series A)</span>
+            </div>
+            <div class="eligibility-item">
+              <div class="check-mark">✓</div>
+              <span>Tech-enabled business model</span>
+            </div>
+            <div class="eligibility-item">
+              <div class="check-mark">✓</div>
+              <span>Willing to relocate to San Francisco</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="opp-actions">
+          <button class="btn btn-primary" onclick="viewDetails('Y Combinator')">View Details</button>
+          <button class="btn btn-secondary" onclick="saveOpp('Y Combinator')">Save</button>
+          <button class="btn btn-icon" onclick="shareOpp('Y Combinator')">↗</button>
+        </div>
+      </div>
+
+      <!-- Opportunity 2 -->
+      <div class="opportunity-item">
+        <div class="opp-header">
+          <div class="opp-left">
+            <h3 class="opp-title">Startup India Seed Fund Scheme</h3>
+            <p class="opp-subtitle">Government Grant · India</p>
+          </div>
+          <div class="opp-match">
+            <div class="match-score">92%</div>
+            <div class="match-text">Match</div>
+          </div>
+        </div>
+
+        <div class="opp-badges">
+          <span class="badge badge-ai">AI Recommended</span>
+          <span class="badge badge-new">New Today</span>
+        </div>
+
+        <div class="ai-insight">
+          <div class="ai-insight-title">AI Analysis</div>
+          <div class="ai-insight-text">
+            Perfect for India-based Pre-Seed startups. Your location and stage align perfectly. Government-backed with no equity dilution.
+          </div>
+        </div>
+
+        <div class="opp-details">
+          <div class="detail">
+            <span class="detail-label">Funding Amount</span>
+            <div class="detail-value amount">₹20-50 Lakhs</div>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Deadline</span>
+            <div class="detail-value">Rolling</div>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Type</span>
+            <div class="detail-value">Grant</div>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Equity</span>
+            <div class="detail-value">0% Dilution</div>
+          </div>
+        </div>
+
+        <div class="eligibility-section">
+          <h4>Eligibility Requirements</h4>
+          <div class="eligibility-list">
+            <div class="eligibility-item">
+              <div class="check-mark">✓</div>
+              <span>Incorporated in India</span>
+            </div>
+            <div class="eligibility-item">
+              <div class="check-mark">✓</div>
+              <span>Recognized by DPIIT</span>
+            </div>
+            <div class="eligibility-item">
+              <div class="check-mark">✓</div>
+              <span>Innovative business model</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="opp-actions">
+          <button class="btn btn-primary" onclick="viewDetails('Startup India')">View Details</button>
+          <button class="btn btn-secondary" onclick="saveOpp('Startup India')">Save</button>
+          <button class="btn btn-icon" onclick="shareOpp('Startup India')">↗</button>
+        </div>
+      </div>
+
+      <!-- Opportunity 3 -->
+      <div class="opportunity-item">
+        <div class="opp-header">
+          <div class="opp-left">
+            <h3 class="opp-title">Techstars Bangalore 2026</h3>
+            <p class="opp-subtitle">Accelerator · India/Global</p>
+          </div>
+          <div class="opp-match">
+            <div class="match-score">88%</div>
+            <div class="match-text">Match</div>
+          </div>
+        </div>
+
+        <div class="opp-badges">
+          <span class="badge badge-ai">AI Recommended</span>
+        </div>
+
+        <div class="ai-insight">
+          <div class="ai-insight-title">AI Analysis</div>
+          <div class="ai-insight-text">
+            Location advantage — you're in Bangalore! Techstars has strong FinTech focus and provides mentorship from 100+ experts in your domain.
+          </div>
+        </div>
+
+        <div class="opp-details">
+          <div class="detail">
+            <span class="detail-label">Funding Amount</span>
+            <div class="detail-value amount">$120,000</div>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Deadline</span>
+            <div class="detail-value">Mar 1, 2026</div>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Type</span>
+            <div class="detail-value">Accelerator</div>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Equity</span>
+            <div class="detail-value">6% Common</div>
+          </div>
+        </div>
+
+        <div class="eligibility-section">
+          <h4>Eligibility Requirements</h4>
+          <div class="eligibility-list">
+            <div class="eligibility-item">
+              <div class="check-mark">✓</div>
+              <span>Post-revenue preferred (flexible)</span>
+            </div>
+            <div class="eligibility-item">
+              <div class="check-mark">✓</div>
+              <span>2+ co-founders minimum</span>
+            </div>
+            <div class="eligibility-item">
+              <div class="check-mark">✓</div>
+              <span>Tech product or platform</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="opp-actions">
+          <button class="btn btn-primary" onclick="viewDetails('Techstars')">View Details</button>
+          <button class="btn btn-secondary" onclick="saveOpp('Techstars')">Save</button>
+          <button class="btn btn-icon" onclick="shareOpp('Techstars')">↗</button>
+        </div>
+      </div>
+
+      <!-- Opportunity 4 -->
+      <div class="opportunity-item">
+        <div class="opp-header">
+          <div class="opp-left">
+            <h3 class="opp-title">Global FinTech Innovation Challenge</h3>
+            <p class="opp-subtitle">Competition · Global</p>
+          </div>
+          <div class="opp-match">
+            <div class="match-score">85%</div>
+            <div class="match-text">Match</div>
+          </div>
+        </div>
+
+        <div class="opp-badges">
+          <span class="badge badge-new">New Today</span>
+        </div>
+
+        <div class="ai-insight">
+          <div class="ai-insight-title">AI Analysis</div>
+          <div class="ai-insight-text">
+            Sector-specific match! Competition specifically for FinTech startups with innovative solutions. Great visibility opportunity.
+          </div>
+        </div>
+
+        <div class="opp-details">
+          <div class="detail">
+            <span class="detail-label">Prize Money</span>
+            <div class="detail-value amount">$50,000</div>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Deadline</span>
+            <div class="detail-value">Feb 28, 2026</div>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Type</span>
+            <div class="detail-value">Competition</div>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Benefits</span>
+            <div class="detail-value">Mentorship + PR</div>
+          </div>
+        </div>
+
+        <div class="eligibility-section">
+          <h4>Eligibility Requirements</h4>
+          <div class="eligibility-list">
+            <div class="eligibility-item">
+              <div class="check-mark">✓</div>
+              <span>FinTech sector focus</span>
+            </div>
+            <div class="eligibility-item">
+              <div class="check-mark">✓</div>
+              <span>Working product/prototype</span>
+            </div>
+            <div class="eligibility-item">
+              <div class="check-mark">✓</div>
+              <span>Innovative technology approach</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="opp-actions">
+          <button class="btn btn-primary" onclick="viewDetails('FinTech Challenge')">View Details</button>
+          <button class="btn btn-secondary" onclick="saveOpp('FinTech Challenge')">Save</button>
+          <button class="btn btn-icon" onclick="shareOpp('FinTech Challenge')">↗</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function toggleFilters() {
+      document.getElementById('filterPanel').classList.toggle('active');
+    }
+
+    function showNotifications() {
+      alert("🔔 You have 3 new funding opportunities matched!\n\n• NASSCOM DeepTech Challenge\n• Microsoft for Startups\n• AWS Activate Program");
+    }
+
+    function updateRange() {
+      const minInput = document.getElementById('minRange');
+      const maxInput = document.getElementById('maxRange');
+      const minDisplay = document.getElementById('minValue');
+      const maxDisplay = document.getElementById('maxValue');
+      const fill = document.getElementById('rangeFill');
+
+      let minVal = parseInt(minInput.value);
+      let maxVal = parseInt(maxInput.value);
+
+      if (minVal > maxVal - 5) {
+        minVal = maxVal - 5;
+        minInput.value = minVal;
+      }
+
+      if (maxVal < minVal + 5) {
+        maxVal = minVal + 5;
+        maxInput.value = maxVal;
+      }
+
+      minDisplay.textContent = minVal === 0 ? '₹0L' : `₹${minVal}L`;
+      maxDisplay.textContent = maxVal >= 100 ? '₹100L+' : `₹${maxVal}L`;
+
+      const minPercent = (minVal / 100) * 100;
+      const maxPercent = (maxVal / 100) * 100;
+      fill.style.left = minPercent + '%';
+      fill.style.right = (100 - maxPercent) + '%';
+    }
+
+    function clearFilters() {
+      document.getElementById('minRange').value = 0;
+      document.getElementById('maxRange').value = 100;
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+      document.querySelectorAll('.filter-select').forEach(select => select.selectedIndex = 0);
+      updateRange();
+      alert("All filters have been cleared");
+    }
+
+    function applyFilters() {
+      toggleFilters();
+      alert("Filters applied successfully");
+    }
+
+    function viewDetails(name) {
+      alert(`Opening detailed view for: ${name}\n\nFull eligibility criteria\nApplication steps\nSuccess stories\nAI recommendations`);
+    }
+
+    function saveOpp(name) {
+      alert(`"${name}" has been saved to your dashboard`);
+    }
+
+    function shareOpp(name) {
+      alert(`Share "${name}" with your team\nLink copied to clipboard`);
+    }
+
+    updateRange();
+  </script>
+
+</body>
+</html>
