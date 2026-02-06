@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Anonymous community discussions for founders and students">
+    <title>Community - FundMe</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .post-card {
+            background-color: var(--color-bg-primary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            margin-bottom: var(--space-3);
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .post-card:hover {
+            border-color: var(--color-text-muted);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .post-question {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .post-meta {
+            display: flex;
+            gap: var(--space-3);
+            align-items: center;
+            margin-top: var(--space-3);
+            padding-top: var(--space-3);
+            border-top: 1px solid var(--color-border-light);
+        }
+
+        .vote-button {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: 0.375rem 0.75rem;
+            background: none;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .vote-button:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        .vote-button.voted {
+            background-color: rgba(37, 99, 235, 0.1);
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        .reply-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: 0.375rem 0.75rem;
+            background: none;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .reply-toggle:hover {
+            border-color: var(--color-text-secondary);
+            color: var(--color-text-primary);
+        }
+
+        .replies-section {
+            margin-top: var(--space-3);
+            padding: var(--space-3);
+            background-color: var(--color-bg-secondary);
+            border-radius: var(--radius-md);
+        }
+
+        .reply-item {
+            padding: var(--space-2) 0;
+            border-bottom: 1px solid var(--color-border-light);
+        }
+
+        .reply-item:last-child {
+            border-bottom: none;
+        }
+
+        .reply-text {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            line-height: var(--line-height-relaxed);
+        }
+
+        .anonymous-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--color-bg-tertiary);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container section">
+        <div class="container-narrow">
+            <!-- Header -->
+            <div class="mb-6">
+                <h1>Community</h1>
+                <p class="text-lg text-secondary">
+                    Anonymous discussions with fellow founders and students
+                </p>
+                <p class="text-sm text-muted mt-2">
+                    All posts are anonymous. Share experiences, ask questions, and learn from the community.
+                </p>
+            </div>
+
+            <!-- Discussion Posts -->
+            <div id="discussionPosts">
+                <!-- Post 1 -->
+                <div class="post-card">
+                    <div class="anonymous-badge">Anonymous Founder</div>
+                    <div class="post-question mt-2">
+                        Has anyone applied to DPIIT at idea stage?
+                    </div>
+                    <p class="text-sm text-secondary">
+                        I have a strong idea and some initial validation but no prototype yet. The DPIIT application
+                        asks for incorporation details. Should I wait until I have a registered entity, or can I apply
+                        earlier?
+                    </p>
+                    <div class="post-meta">
+                        <button class="vote-button" data-vote-id="1">
+                            <span>↑</span>
+                            <span class="vote-count">24</span>
+                        </button>
+                        <button class="reply-toggle">
+                            <span class="text-sm text-muted">Comments</span>
+                            <span>5 replies</span>
+                        </button>
+                        <span class="text-xs text-muted">2 hours ago</span>
+                    </div>
+                    <div class="replies-section hidden">
+                        <div class="reply-item">
+                            <div class="anonymous-badge mb-1">Anonymous</div>
+                            <p class="reply-text">
+                                DPIIT recognition requires incorporation. You need to register your startup first. But
+                                don't rush it—wait until you're ready to commit to the legal entity.
+                            </p>
+                        </div>
+                        <div class="reply-item">
+                            <div class="anonymous-badge mb-1">Anonymous</div>
+                            <p class="reply-text">
+                                I applied after incorporation. The process is straightforward once you have your CIN and
+                                PAN. Takes about 2-3 weeks for approval.
+                            </p>
+                        </div>
+                        <div class="reply-item">
+                            <div class="anonymous-badge mb-1">Anonymous</div>
+                            <p class="reply-text">
+                                Focus on validation first. DPIIT is useful for tax benefits and unlocking SISFS, but if
+                                you're at idea stage, spend time on product-market fit.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post 2 -->
+                <div class="post-card">
+                    <div class="anonymous-badge">Anonymous Student</div>
+                    <div class="post-question mt-2">
+                        Is it worth registering before applying to incubators?
+                    </div>
+                    <p class="text-sm text-secondary">
+                        I'm a final year student and want to apply to college incubators. Do I need to incorporate
+                        first, or do they accept pre-incorporation applications? Worried about legal costs.
+                    </p>
+                    <div class="post-meta">
+                        <button class="vote-button" data-vote-id="2">
+                            <span>↑</span>
+                            <span class="vote-count">18</span>
+                        </button>
+                        <button class="reply-toggle">
+                            <span class="text-sm text-muted">Comments</span>
+                            <span>3 replies</span>
+                        </button>
+                        <span class="text-xs text-muted">5 hours ago</span>
+                    </div>
+                    <div class="replies-section hidden">
+                        <div class="reply-item">
+                            <div class="anonymous-badge mb-1">Anonymous</div>
+                            <p class="reply-text">
+                                Most university incubators accept pre-incorporation applications. In fact, they often
+                                help you with incorporation after selection.
+                            </p>
+                        </div>
+                        <div class="reply-item">
+                            <div class="anonymous-badge mb-1">Anonymous</div>
+                            <p class="reply-text">
+                                Applied to 3 college incubators last year as a team without incorporation. All accepted
+                                pre-incorporation. Just show strong validation and team commitment.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post 3 -->
+                <div class="post-card">
+                    <div class="anonymous-badge">Anonymous Founder</div>
+                    <div class="post-question mt-2">
+                        What's the real timeline for SISFS approval?
+                    </div>
+                    <p class="text-sm text-secondary">
+                        The website says up to 90 days, but curious about actual experiences. Also, how strong does your
+                        prototype need to be?
+                    </p>
+                    <div class="post-meta">
+                        <button class="vote-button voted" data-vote-id="3">
+                            <span>↑</span>
+                            <span class="vote-count">35</span>
+                        </button>
+                        <button class="reply-toggle">
+                            <span class="text-sm text-muted">Comments</span>
+                            <span>7 replies</span>
+                        </button>
+                        <span class="text-xs text-muted">1 day ago</span>
+                    </div>
+                    <div class="replies-section hidden">
+                        <div class="reply-item">
+                            <div class="anonymous-badge mb-1">Anonymous</div>
+                            <p class="reply-text">
+                                Applied in Q2 2025, took 4 months total. Prototype needs to be functional, not perfect.
+                                They care more about problem validation and team capability.
+                            </p>
+                        </div>
+                        <div class="reply-item">
+                            <div class="anonymous-badge mb-1">Anonymous</div>
+                            <p class="reply-text">
+                                My timeline was 3.5 months. Make sure your pitch deck is really strong. The panel
+                                evaluates potential more than current traction.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post 4 -->
+                <div class="post-card">
+                    <div class="anonymous-badge">Anonymous Student</div>
+                    <div class="post-question mt-2">
+                        Should I focus on competitions or product development?
+                    </div>
+                    <p class="text-sm text-secondary">
+                        In college, trying to balance hackathons/competitions with actual product development.
+                        Competitions give visibility but take time. What's the right balance?
+                    </p>
+                    <div class="post-meta">
+                        <button class="vote-button" data-vote-id="4">
+                            <span>↑</span>
+                            <span class="vote-count">12</span>
+                        </button>
+                        <button class="reply-toggle">
+                            <span class="text-sm text-muted">Comments</span>
+                            <span>4 replies</span>
+                        </button>
+                        <span class="text-xs text-muted">2 days ago</span>
+                    </div>
+                    <div class="replies-section hidden">
+                        <div class="reply-item">
+                            <div class="anonymous-badge mb-1">Anonymous</div>
+                            <p class="reply-text">
+                                Product development first. Competitions are good for networking and small prizes, but
+                                building something real is what matters long-term.
+                            </p>
+                        </div>
+                        <div class="reply-item">
+                            <div class="anonymous-badge mb-1">Anonymous</div>
+                            <p class="reply-text">
+                                I did both. Pick 2-3 high-quality competitions per year, but dedicate 80% of time to
+                                product. SIH and similar programs are worth it.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post 5 -->
+                <div class="post-card">
+                    <div class="anonymous-badge">Anonymous Founder</div>
+                    <div class="post-question mt-2">
+                        Experience with state-level startup policies?
+                    </div>
+                    <p class="text-sm text-secondary">
+                        Every state has its own startup policy with grants and benefits. Has anyone successfully
+                        leveraged state programs? Which states have the most active support?
+                    </p>
+                    <div class="post-meta">
+                        <button class="vote-button" data-vote-id="5">
+                            <span>↑</span>
+                            <span class="vote-count">29</span>
+                        </button>
+                        <button class="reply-toggle">
+                            <span class="text-sm text-muted">Comments</span>
+                            <span>6 replies</span>
+                        </button>
+                        <span class="text-xs text-muted">3 days ago</span>
+                    </div>
+                    <div class="replies-section hidden">
+                        <div class="reply-item">
+                            <div class="anonymous-badge mb-1">Anonymous</div>
+                            <p class="reply-text">
+                                Karnataka and Telangana have excellent programs. T-Hub in Hyderabad is very active.
+                                Kerala also has good support for tech startups.
+                            </p>
+                        </div>
+                        <div class="reply-item">
+                            <div class="anonymous-badge mb-1">Anonymous</div>
+                            <p class="reply-text">
+                                Gujarat's iCreate is worth looking into. Maharashtra has MSINS. State programs are often
+                                faster than central schemes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post 6 -->
+                <div class="post-card">
+                    <div class="anonymous-badge">Anonymous Student</div>
+                    <div class="post-question mt-2">
+                        Co-founder equity split advice needed
+                    </div>
+                    <p class="text-sm text-secondary">
+                        Starting with a college friend. We're both contributing equally but at different times (I'm
+                        starting full-time now, they'll join after graduation in 6 months). How to handle equity fairly?
+                    </p>
+                    <div class="post-meta">
+                        <button class="vote-button" data-vote-id="6">
+                            <span>↑</span>
+                            <span class="vote-count">16</span>
+                        </button>
+                        <button class="reply-toggle">
+                            <span class="text-sm text-muted">Comments</span>
+                            <span>2 replies</span>
+                        </button>
+                        <span class="text-xs text-muted">1 week ago</span>
+                    </div>
+                    <div class="replies-section hidden">
+                        <div class="reply-item">
+                            <div class="anonymous-badge mb-1">Anonymous</div>
+                            <p class="reply-text">
+                                Use a vesting schedule. Standard is 4 years with 1-year cliff. Protects both of you if
+                                commitment changes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/state.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/interactions.js"></script>
+
+    <script>
+        // Check if onboarded
+        if (!FundMeState.isOnboarded()) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+
+</html>

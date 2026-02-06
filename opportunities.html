@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover funding opportunities matched to your startup stage and goals">
+    <title>Funding Opportunities - FundMe</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .layout-with-sidebar {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: var(--space-4);
+        }
+
+        @media (max-width: 1024px) {
+            .layout-with-sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: 2;
+            }
+
+            .main-content {
+                order: 1;
+            }
+        }
+
+        .opportunity-card {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container section">
+        <div class="mb-6">
+            <h1>Funding Opportunities</h1>
+            <p class="text-lg text-secondary">
+                Discover grants, competitions, incubators, and investment programs
+            </p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <ul class="tabs-list">
+                <li><button class="tab-button active" data-tab="eligible">Eligible for You</button></li>
+                <li><button class="tab-button" data-tab="browse">Browse All</button></li>
+            </ul>
+        </div>
+
+        <div class="layout-with-sidebar">
+            <!-- Filters Sidebar -->
+            <aside class="sidebar">
+                <div class="filters-section">
+                    <h3 class="filters-title">Filters</h3>
+
+                    <div class="filter-group">
+                        <div class="filter-group-title">Stage</div>
+                        <select id="filterStage" class="form-select">
+                            <option value="">All stages</option>
+                            <option value="Idea">Idea</option>
+                            <option value="Prototype">Prototype</option>
+                            <option value="Registered">Registered Startup</option>
+                            <option value="Revenue">Early Revenue</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-group-title">Funding Size</div>
+                        <select id="filterSize" class="form-select">
+                            <option value="">All amounts</option>
+                            <option value="small">
+                                < ₹5L</option>
+                            <option value="medium">₹5L - ₹25L</option>
+                            <option value="large">₹25L - ₹1Cr</option>
+                            <option value="xlarge">₹1Cr+</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-group-title">Type</div>
+                        <select id="filterType" class="form-select">
+                            <option value="">All types</option>
+                            <option value="Grant">Grant</option>
+                            <option value="Competition">Competition</option>
+                            <option value="Incubator">Incubator</option>
+                            <option value="Accelerator">Accelerator</option>
+                            <option value="Government">Government Scheme</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-group-title">Geography</div>
+                        <select id="filterGeo" class="form-select">
+                            <option value="">All India</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Gujarat">Gujarat</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: var(--space-3);"
+                        onclick="resetFilters()">
+                        Reset Filters
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Tab Content: Eligible -->
+                <div id="eligible" class="tab-content active">
+                    <div class="grid" id="eligibleOpportunities" style="gap: var(--space-3);">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Tab Content: Browse All -->
+                <div id="browse" class="tab-content">
+                    <div class="grid" id="allOpportunities" style="gap: var(--space-3);">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/state.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/interactions.js"></script>
+
+    <script>
+        // Check if onboarded
+        if (!FundMeState.isOnboarded()) {
+            window.location.href = 'index.html';
+        }
+
+        // All opportunities data
+        const allOpportunities = [
+            {
+                name: 'Smart India Hackathon',
+                description: 'India\'s biggest open innovation challenge for solving problems across government and industries',
+                amount: '₹1L - ₹5L',
+                stage: 'Idea',
+                type: 'Competition',
+                geography: 'All India',
+                size: 'small',
+                eligibility: 'Students and recent graduates'
+            },
+            {
+                name: 'DPIIT Startup Recognition',
+                description: 'Government recognition for tax benefits, easier compliance, and access to funding schemes',
+                amount: 'Recognition',
+                stage: 'Prototype',
+                type: 'Government',
+                geography: 'All India',
+                size: 'small',
+                eligibility: 'Incorporated entities less than 10 years old'
+            },
+            {
+                name: 'SISFS (Startup India Seed Fund)',
+                description: 'Government seed funding for proof of concept and prototype development',
+                amount: '₹20L - ₹50L',
+                stage: 'Registered',
+                type: 'Government',
+                geography: 'All India',
+                size: 'medium',
+                eligibility: 'DPIIT-recognized startups less than 2 years old'
+            },
+            {
+                name: 'NIDHI Prayas',
+                description: 'Grant support for translating innovative ideas into prototypes',
+                amount: '₹10L',
+                stage: 'Prototype',
+                type: 'Grant',
+                geography: 'All India',
+                size: 'small',
+                eligibility: 'Students, faculty, and startups'
+            },
+            {
+                name: 'T-Hub Incubation',
+                description: 'India\'s largest startup incubator with funding, mentorship, and network access',
+                amount: '₹25L - ₹50L',
+                stage: 'Registered',
+                type: 'Incubator',
+                geography: 'Telangana',
+                size: 'medium',
+                eligibility: 'Early-stage tech startups'
+            },
+            {
+                name: 'NSRCEL (IIM Bangalore)',
+                description: 'Premier incubation program with mentorship from top entrepreneurs and investors',
+                amount: '₹15L - ₹30L',
+                stage: 'Registered',
+                type: 'Incubator',
+                geography: 'Karnataka',
+                size: 'medium',
+                eligibility: 'Scalable business models'
+            },
+            {
+                name: 'Atal Incubation Centres',
+                description: 'Network of incubators across India providing infrastructure and seed funding',
+                amount: '₹10L - ₹25L',
+                stage: 'Prototype',
+                type: 'Incubator',
+                geography: 'All India',
+                size: 'medium',
+                eligibility: 'Technology-based innovations'
+            },
+            {
+                name: 'Y Combinator',
+                description: 'World\'s most renowned startup accelerator with $500K investment',
+                amount: '₹4Cr - ₹5Cr',
+                stage: 'Revenue',
+                type: 'Accelerator',
+                geography: 'All India',
+                size: 'xlarge',
+                eligibility: 'Strong traction and ambitious vision'
+            },
+            {
+                name: 'Sequoia Surge',
+                description: 'Rapid scale-up program for startups in India and Southeast Asia',
+                amount: '₹1.5Cr - ₹3Cr',
+                stage: 'Revenue',
+                type: 'Accelerator',
+                geography: 'All India',
+                size: 'xlarge',
+                eligibility: 'Product-market fit demonstrated'
+            },
+            {
+                name: 'Microsoft for Startups',
+                description: 'Cloud credits, technical support, and go-to-market assistance',
+                amount: 'Up to ₹1Cr credits',
+                stage: 'Registered',
+                type: 'Grant',
+                geography: 'All India',
+                size: 'medium',
+                eligibility: 'B2B SaaS startups'
+            },
+            {
+                name: 'IIT Madras Incubation Cell',
+                description: 'Deep tech focused incubation with funding and technical mentorship',
+                amount: '₹10L - ₹30L',
+                stage: 'Prototype',
+                type: 'Incubator',
+                geography: 'Tamil Nadu',
+                size: 'medium',
+                eligibility: 'Technology innovations'
+            },
+            {
+                name: 'SINE (IIT Bombay)',
+                description: 'Social innovation and entrepreneurship support with funding and infrastructure',
+                amount: '₹15L - ₹35L',
+                stage: 'Registered',
+                type: 'Incubator',
+                geography: 'Maharashtra',
+                size: 'medium',
+                eligibility: 'Social impact startups'
+            },
+            {
+                name: 'Karnataka Startup Cell',
+                description: 'State government grants and support for Karnataka-based startups',
+                amount: '₹5L - ₹20L',
+                stage: 'Prototype',
+                type: 'Government',
+                geography: 'Karnataka',
+                size: 'small',
+                eligibility: 'Registered in Karnataka'
+            },
+            {
+                name: 'Student Startup Fund',
+                description: 'University grants for student entrepreneurs to build initial prototypes',
+                amount: '₹50K - ₹2L',
+                stage: 'Idea',
+                type: 'Grant',
+                geography: 'All India',
+                size: 'small',
+                eligibility: 'Current students'
+            },
+            {
+                name: 'Zone Startups India',
+                description: 'Early-stage accelerator focused on mentorship and investor connections',
+                amount: '₹50L - ₹1Cr',
+                stage: 'Revenue',
+                type: 'Accelerator',
+                geography: 'All India',
+                size: 'large',
+                eligibility: 'Revenue-generating startups'
+            }
+        ];
+
+        let filteredOpportunities = [...allOpportunities];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderEligibleOpportunities();
+            renderAllOpportunities();
+            setupFilters();
+        });
+
+        function renderEligibleOpportunities() {
+            const state = FundMeState.getState();
+            const container = document.getElementById('eligibleOpportunities');
+
+            // Filter based on user stage
+            const eligible = allOpportunities.filter(opp => {
+                return opp.stage === state.startupStage || opp.geography === state.state;
+            });
+
+            if (eligible.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p class="text-secondary">No opportunities found matching your profile. Try browsing all opportunities.</p></div>';
+                return;
+            }
+
+            container.innerHTML = eligible.map(opp => createOpportunityCard(opp)).join('');
+        }
+
+        function renderAllOpportunities() {
+            const container = document.getElementById('allOpportunities');
+            container.innerHTML = filteredOpportunities.map(opp => createOpportunityCard(opp)).join('');
+        }
+
+        function createOpportunityCard(opp) {
+            return `
+        <div class="card opportunity-card card-interactive" data-stage="${opp.stage}" data-type="${opp.type}" data-size="${opp.size}" data-geo="${opp.geography}">
+          <div class="card-title">${opp.name}</div>
+          <div class="card-description">${opp.description}</div>
+          <div class="card-footer">
+            <span class="tag tag-primary">${opp.amount}</span>
+            <span class="tag">${opp.type}</span>
+            <span class="tag">${opp.stage}</span>
+          </div>
+          <div class="text-xs text-muted mt-2">
+            <strong>Eligibility:</strong> ${opp.eligibility}
+          </div>
+        </div>
+      `;
+        }
+
+        function setupFilters() {
+            const filters = {
+                stage: document.getElementById('filterStage'),
+                size: document.getElementById('filterSize'),
+                type: document.getElementById('filterType'),
+                geo: document.getElementById('filterGeo')
+            };
+
+            Object.values(filters).forEach(filter => {
+                filter.addEventListener('change', applyFilters);
+            });
+        }
+
+        function applyFilters() {
+            const stageFilter = document.getElementById('filterStage').value;
+            const sizeFilter = document.getElementById('filterSize').value;
+            const typeFilter = document.getElementById('filterType').value;
+            const geoFilter = document.getElementById('filterGeo').value;
+
+            filteredOpportunities = allOpportunities.filter(opp => {
+                if (stageFilter && opp.stage !== stageFilter) return false;
+                if (sizeFilter && opp.size !== sizeFilter) return false;
+                if (typeFilter && opp.type !== typeFilter) return false;
+                if (geoFilter && opp.geography !== geoFilter && opp.geography !== 'All India') return false;
+                return true;
+            });
+
+            renderAllOpportunities();
+        }
+
+        function resetFilters() {
+            document.getElementById('filterStage').value = '';
+            document.getElementById('filterSize').value = '';
+            document.getElementById('filterType').value = '';
+            document.getElementById('filterGeo').value = '';
+
+            filteredOpportunities = [...allOpportunities];
+            renderAllOpportunities();
+        }
+    </script>
+</body>
+
+</html>
